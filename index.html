@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pizzeria Nova — Le goût de l'Italie chez vous</title>
+  <meta name="description" content="Pizzeria Nova à Dakar : pizzas artisanales, pâte maison, ingrédients frais, livraison rapide en 30 min. Commandez en ligne !">
+  <meta name="theme-color" content="#d97706">
+
+  <!-- Open Graph -->
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Pizzeria Nova — Le goût de l'Italie chez vous">
+  <meta property="og:description" content="Pizzeria Nova à Dakar : pizzas artisanales, pâte maison, ingrédients frais, livraison rapide en 30 min. Commandez en ligne !">
+  <meta property="og:image" content="https://images.unsplash.com/photo-1513104890138-7c749659a591?w=1200&q=80">
+  <meta property="og:url" content="https://pizzeria-nova.dakar">
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800;900&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'nova-amber': '#d97706',
+            'nova-amber-dark': '#b45309',
+            'nova-red': '#b91c1c',
+            'nova-stone': '#1c1917',
+            'nova-light': '#fafaf9',
+            'nova-bg': '#fffbeb',
+          },
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            display: ['Space Grotesk', 'sans-serif'],
+          },
+          animation: {
+            fadeIn: 'fadeIn 1s ease-out',
+            pulseSlow: 'pulse 2s ease-in-out infinite',
+            glow: 'glow 2s ease-in-out infinite alternate',
+            slideUp: 'slideUp 0.5s ease-out',
+          },
+          keyframes: {
+            fadeIn: {
+              '0%': { opacity: '0', transform: 'translateY(24px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            },
+            glow: {
+              '0%': { boxShadow: '0 0 8px rgba(217, 119, 6, 0.6)' },
+              '100%': { boxShadow: '0 0 24px rgba(217, 119, 6, 0.9)' },
+            },
+            slideUp: {
+              '0%': { opacity: '0', transform: 'translateY(40px)' },
+              '100%': { opacity: '1', transform: 'translateY(0)' },
+            },
+          },
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background-color: #fafaf9;
+      color: #1c1917;
+      scroll-behavior: smooth;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      font-family: 'Space Grotesk', sans-serif;
+    }
+    .scroll-indicator {
+      animation: bounce 2s infinite;
+    }
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(12px); }
+    }
+    .menu-tab.active {
+      background-color: #d97706;
+      color: white;
+      border-color: #d97706;
+    }
+    .cart-badge {
+      background-color: #b91c1c;
+      color: white;
+    }
+    .glass {
+      background: rgba(255, 255, 255, 0.8);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+    }
+    .gradient-text {
+      background: linear-gradient(135deg, #d97706, #b91c1c);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .bento-card {
+      background-color: white;
+      border: 1px solid #e5e7eb;
+      border-radius: 1.5rem;
+      transition: box-shadow 0.3s, transform 0.3s;
+    }
+    .bento-card:hover {
+      box-shadow: 0 20px 30px -12px rgba(0,0,0,0.1);
+      transform: translateY(-4px);
+    }
+    /* Sticky nav styles */
+    #sticky-nav {
+      backdrop-filter: blur(12px);
+      background: rgba(255, 255, 255, 0.9);
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    .nav-link {
+      transition: color 0.3s;
+    }
+    .nav-link:hover {
+      color: #d97706;
+    }
+    .hamburger {
+      display: flex;
+      flex-direction: column;
+      cursor: pointer;
+    }
+    .hamburger span {
+      display: block;
+      width: 28px;
+      height: 3px;
+      background-color: #1c1917;
+      margin: 4px 0;
+      transition: all 0.3s;
+      border-radius: 9999px;
+    }
+    .hamburger.active span:nth-child(1) {
+      transform: rotate(45deg) translate(5px, 5px);
+    }
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+    }
+    .hamburger.active span:nth-child(3) {
+      transform: rotate(-45deg) translate(7px, -7px);
+    }
+    #mobile-menu {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease;
+    }
+    #mobile-menu.open {
+      max-height: 350px;
+    }
+  </style>
+</head>
+<body class="bg-nova-light text-nova-stone font-sans">
+
+  <!-- ====== STICKY NAVIGATION ====== -->
+  <nav id="sticky-nav" class="sticky top-0 z-50 w-full shadow-sm">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+      <!-- Logo -->
+      <a href="#hero" class="flex items-center gap-2">
+        <span class="text-2xl font-black text-nova-amber">Nova</span>
+        <span class="hidden sm:inline text-stone-500 font-medium">Pizzeria</span>
+      </a>
+      <!-- Desktop menu -->
+      <ul class="hidden md:flex items-center gap-8 text-sm font-semibold text-stone-700">
+        <li><a href="#hero" class="nav-link">Accueil</a></li>
+        <li><a href="#features" class="nav-link">Philosophie</a></li>
+        <li><a href="#menu" class="nav-link">Menu</a></li>
+        <li><a href="#galerie" class="nav-link">Galerie</a></li>
+        <li><a href="#paiement" class="nav-link">Paiement</a></li>
+        <li><a href="#contact" class="nav-link">Contact</a></li>
+      </ul>
+      <!-- Hamburger mobile -->
+      <div class="md:hidden hamburger" id="hamburger" onclick="toggleMobileMenu()">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+    <!-- Mobile menu -->
+    <div id="mobile-menu" class="md:hidden bg-white/95 backdrop-blur-md">
+      <ul class="flex flex-col items-center gap-4 py-6 text-lg font-semibold text-stone-700">
+        <li><a href="#hero" onclick="closeMobileMenu()" class="nav-link">Accueil</a></li>
+        <li><a href="#features" onclick="closeMobileMenu()" class="nav-link">Philosophie</a></li>
+        <li><a href="#menu" onclick="closeMobileMenu()" class="nav-link">Menu</a></li>
+        <li><a href="#galerie" onclick="closeMobileMenu()" class="nav-link">Galerie</a></li>
+        <li><a href="#paiement" onclick="closeMobileMenu()" class="nav-link">Paiement</a></li>
+        <li><a href="#contact" onclick="closeMobileMenu()" class="nav-link">Contact</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ====== HERO CINEMATIC ====== -->
+  <section id="hero" class="relative min-h-screen flex items-center justify-center overflow-hidden -mt-16" style="padding-top: 4rem;">
+    <div class="absolute inset-0 bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1513104890138-7c749659a591?w=1920&q=80');">
+      <div class="absolute inset-0 bg-gradient-to-br from-stone-900/80 via-stone-900/60 to-stone-900/90"></div>
+    </div>
+    <div class="relative z-10 text-center px-4 max-w-5xl mx-auto animate-fadeIn">
+      <span class="inline-block px-4 py-2 rounded-full bg-nova-amber/20 text-nova-amber text-sm font-semibold tracking-widest uppercase mb-6 border border-nova-amber/30">🔥 Livraison en 30 min</span>
+      <h1 class="text-5xl md:text-7xl lg:text-8xl font-black tracking-tight text-white mb-4">Pizzeria Nova</h1>
+      <p class="text-xl md:text-2xl font-light max-w-2xl mx-auto text-white/80 mb-8">Pizzas artisanales préparées avec des ingrédients frais et livrées chaudes à votre porte</p>
+      <div class="flex flex-col sm:flex-row gap-4 justify-center">
+        <a href="#menu" class="inline-block bg-nova-amber hover:bg-nova-amber-dark text-white font-bold text-lg px-10 py-4 rounded-full transition-all transform hover:scale-105 shadow-xl hover:animate-glow">Commander maintenant</a>
+        <a href="#menu" class="inline-block border-2 border-white/30 text-white font-semibold text-lg px-10 py-4 rounded-full hover:bg-white/10 transition">Voir le menu</a>
+      </div>
+    </div>
+    <div class="absolute bottom-8 left-1/2 transform -translate-x-1/2 text-white/50 scroll-indicator">
+      <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14"/><path d="m19 12-7 7-7-7"/></svg>
+    </div>
+  </section>
+
+  <!-- ====== FEATURES BENTO ====== -->
+  <section id="features" class="py-20 px-4 max-w-7xl mx-auto">
+    <div class="text-center mb-12">
+      <h2 class="text-4xl md:text-5xl font-bold gradient-text">Notre philosophie</h2>
+      <p class="text-stone-600 mt-4 max-w-2xl mx-auto">Des produits d'exception pour des pizzas d'exception.</p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-6 auto-rows-[220px]">
+      <!-- Card 1 (1x1) -->
+      <div class="bento-card p-8 flex flex-col justify-center group">
+        <div class="w-12 h-12 rounded-xl bg-nova-amber/20 flex items-center justify-center mb-4 group-hover:bg-nova-amber/30 transition">
+          <svg class="w-7 h-7 text-nova-amber" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 13.87A4 4 0 0 1 7.41 6a5.11 5.11 0 0 1 1.05-1.54 5 5 0 0 1 7.08 0A5.11 5.11 0 0 1 16.59 6 4 4 0 0 1 18 13.87V21H6Z"/><line x1="6" x2="18" y1="17" y2="17"/></svg>
+        </div>
+        <h3 class="text-2xl font-bold mb-2 text-stone-900">Pâte maison</h3>
+        <p class="text-stone-600 leading-relaxed text-sm">Pétrie chaque matin avec farine italienne, reposée 48h pour une texture légère</p>
+      </div>
+      <!-- Card 2 (2x1) -->
+      <div class="bento-card col-span-1 md:col-span-2 overflow-hidden flex flex-col md:flex-row">
+        <div class="p-8 flex-1">
+          <div class="w-12 h-12 rounded-xl bg-nova-red/20 flex items-center justify-center mb-4">
+            <svg class="w-7 h-7 text-nova-red" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <h3 class="text-2xl font-bold mb-2 text-stone-900">Ingrédients frais</h3>
+          <p class="text-stone-600 leading-relaxed text-sm">Mozzarella di Bufala, tomates San Marzano, basilic frais de notre potager</p>
+        </div>
+        <div class="w-full md:w-56 h-56 md:h-auto bg-cover bg-center" style="background-image: url('https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=600&q=80');"></div>
+      </div>
+      <!-- Card 3 (1x1) -->
+      <div class="bento-card p-8 flex flex-col justify-center group">
+        <div class="w-12 h-12 rounded-xl bg-nova-amber/20 flex items-center justify-center mb-4 group-hover:bg-nova-amber/30 transition">
+          <svg class="w-7 h-7 text-nova-amber" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 3v18"/><path d="M21 9H3"/></svg>
+        </div>
+        <h3 class="text-2xl font-bold mb-2 text-stone-900">Livraison rapide</h3>
+        <p class="text-stone-600 leading-relaxed text-sm">Livré en moins de 30 minutes dans un rayon de 10 km, chaud et croustillant</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== MENU SECTION ====== -->
+  <section id="menu" class="py-20 bg-stone-100">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="text-center mb-12">
+        <h2 class="text-4xl md:text-5xl font-bold gradient-text">Notre menu</h2>
+        <p class="text-stone-600 mt-4">Des classiques italiens revisités avec passion.</p>
+      </div>
+
+      <!-- Tabs -->
+      <div class="flex flex-wrap justify-center gap-2 mb-10" id="menu-tabs">
+        <button class="menu-tab active px-6 py-2 rounded-full border border-nova-amber/50 text-nova-amber font-semibold hover:bg-nova-amber hover:text-white transition" data-category="pizzas">Pizzas</button>
+        <button class="menu-tab px-6 py-2 rounded-full border border-nova-amber/50 text-nova-amber font-semibold hover:bg-nova-amber hover:text-white transition" data-category="pates">Pâtes</button>
+        <button class="menu-tab px-6 py-2 rounded-full border border-nova-amber/50 text-nova-amber font-semibold hover:bg-nova-amber hover:text-white transition" data-category="boissons">Boissons</button>
+        <button class="menu-tab px-6 py-2 rounded-full border border-nova-amber/50 text-nova-amber font-semibold hover:bg-nova-amber hover:text-white transition" data-category="desserts">Desserts</button>
+      </div>
+
+      <!-- Menu grid -->
+      <div id="menu-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <!-- Items will be inserted by JS -->
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== GALLERY MASONRY ====== -->
+  <section id="galerie" class="py-20 bg-nova-light">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="text-center mb-12">
+        <h2 class="text-4xl md:text-5xl font-bold gradient-text">Galerie</h2>
+        <p class="text-stone-600 mt-4">L'ambiance et les saveurs de Nova en images.</p>
+      </div>
+      <div class="columns-1 md:columns-2 lg:columns-3 gap-4 space-y-4">
+        <div class="break-inside-avoid rounded-2xl overflow-hidden relative group">
+          <img src="https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=600&q=80" alt="Pizza" loading="lazy" class="w-full h-auto hover:scale-110 transition-transform duration-700">
+          <div class="absolute inset-0 bg-gradient-to-t from-stone-900/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+            <p class="text-white font-semibold text-lg">Margherita classique</p>
+          </div>
+        </div>
+        <div class="break-inside-avoid rounded-2xl overflow-hidden relative group">
+          <img src="https://images.unsplash.com/photo-1555396273-367ea4eb4db5?w=600&q=80" alt="Pizza" loading="lazy" class="w-full h-auto hover:scale-110 transition-transform duration-700">
+          <div class="absolute inset-0 bg-gradient-to-t from-stone-900/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+            <p class="text-white font-semibold text-lg">Pepperoni</p>
+          </div>
+        </div>
+        <div class="break-inside-avoid rounded-2xl overflow-hidden relative group">
+          <img src="https://images.unsplash.com/photo-1604908176997-125f25cc6f3d?w=600&q=80" alt="Pâte fraîche" loading="lazy" class="w-full h-auto hover:scale-110 transition-transform duration-700">
+          <div class="absolute inset-0 bg-gradient-to-t from-stone-900/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+            <p class="text-white font-semibold text-lg">Pâte maison</p>
+          </div>
+        </div>
+        <div class="break-inside-avoid rounded-2xl overflow-hidden relative group">
+          <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?w=600&q=80" alt="Restaurant" loading="lazy" class="w-full h-auto hover:scale-110 transition-transform duration-700">
+          <div class="absolute inset-0 bg-gradient-to-t from-stone-900/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+            <p class="text-white font-semibold text-lg">Notre salle</p>
+          </div>
+        </div>
+        <div class="break-inside-avoid rounded-2xl overflow-hidden relative group">
+          <img src="https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=600&q=80" alt="Dessert" loading="lazy" class="w-full h-auto hover:scale-110 transition-transform duration-700">
+          <div class="absolute inset-0 bg-gradient-to-t from-stone-900/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+            <p class="text-white font-semibold text-lg">Tiramisu</p>
+          </div>
+        </div>
+        <div class="break-inside-avoid rounded-2xl overflow-hidden relative group">
+          <img src="https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=600&q=80" alt="Boisson" loading="lazy" class="w-full h-auto hover:scale-110 transition-transform duration-700">
+          <div class="absolute inset-0 bg-gradient-to-t from-stone-900/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+            <p class="text-white font-semibold text-lg">Limoncello</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== TESTIMONIALS ====== -->
+  <section class="py-20 bg-stone-100">
+    <div class="max-w-7xl mx-auto px-4">
+      <div class="text-center mb-12">
+        <h2 class="text-4xl md:text-5xl font-bold gradient-text">Ils nous aiment</h2>
+        <p class="text-stone-600 mt-4">Ce que nos clients disent de nous.</p>
+      </div>
+      <div class="grid md:grid-cols-3 gap-8">
+        <div class="bento-card p-8">
+          <div class="flex items-center gap-4 mb-4">
+            <img src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&q=80" alt="Client" class="w-14 h-14 rounded-full object-cover ring-2 ring-nova-amber/50">
+            <div>
+              <div class="flex text-yellow-400">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              </div>
+            </div>
+          </div>
+          <p class="text-lg italic leading-relaxed text-stone-700 mb-4">« Les meilleures pizzas de Dakar ! La pâte est incroyablement légère, et les ingrédients sont d'une fraîcheur rare. Je recommande vivement. »</p>
+          <hr class="mb-4 border-stone-200">
+          <p class="font-semibold text-stone-900">Aminata Ndiaye</p>
+          <p class="text-sm text-stone-500">Cliente fidèle</p>
+        </div>
+        <div class="bento-card p-8">
+          <div class="flex items-center gap-4 mb-4">
+            <img src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&q=80" alt="Client" class="w-14 h-14 rounded-full object-cover ring-2 ring-nova-amber/50">
+            <div>
+              <div class="flex text-yellow-400">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              </div>
+            </div>
+          </div>
+          <p class="text-lg italic leading-relaxed text-stone-700 mb-4">« Livraison ultra rapide, la pizza était encore chaude et délicieuse. Le rapport qualité-prix est excellent. Un vrai régal ! »</p>
+          <hr class="mb-4 border-stone-200">
+          <p class="font-semibold text-stone-900">Mamadou Diallo</p>
+          <p class="text-sm text-stone-500">Client régulier</p>
+        </div>
+        <div class="bento-card p-8">
+          <div class="flex items-center gap-4 mb-4">
+            <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=100&q=80" alt="Client" class="w-14 h-14 rounded-full object-cover ring-2 ring-nova-amber/50">
+            <div>
+              <div class="flex text-yellow-400">
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+                <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20"><path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/></svg>
+              </div>
+            </div>
+          </div>
+          <p class="text-lg italic leading-relaxed text-stone-700 mb-4">« L'ambiance du restaurant est chaleureuse, le service impeccable. Leur pâte à pizza est un vrai délice, on sent le savoir-faire italien. »</p>
+          <hr class="mb-4 border-stone-200">
+          <p class="font-semibold text-stone-900">Sophie Lefèvre</p>
+          <p class="text-sm text-stone-500">Gourmande</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ====== CTA BANNER ====== -->
+  <section class="relative py-24 bg-gradient-to-r from-stone-900 via-stone-800 to-stone-900 overflow-hidden">
+    <div class="absolute inset-0 bg-cover bg-center opacity-10" style="background-image: url('https://images.unsplash.com/photo-1565299624946-b28f40a0ae38?w=1920&q=80');"></div>
+    <div class="relative z-10 text-center px-4">
+      <h2 class="text-4xl md:text-6xl font-black text-white mb-6">Prêt à déguster ?</h2>
+      <p class="text-xl text-stone-300 mb-8 max-w-2xl mx-auto">Commandez en ligne et recevez votre pizza chaude en moins de 30 minutes.</p>
+      <a href="#menu" class="inline-block bg-nova-amber hover:bg-nova-amber-dark text-white font-bold text-lg px-12 py-5 rounded-full transition-all transform hover:scale-105 shadow-2xl hover:animate-glow">Commander maintenant</a>
+    </div>
+  </section>
+
+  <!-- ====== MOBILE MONEY CTA ====== -->
+  <section id="paiement" class="py-16 bg-stone-100">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+      <h2 class="text-3xl md:text-4xl font-bold gradient-text mb-4">Payer par Mobile Money</h2>
+      <p class="text-stone-600 mb-8">Simple, rapide et sécurisé.</p>
+      <div class="flex flex-wrap justify-center gap-6 mb-8">
+        <span class="inline-flex items-center gap-2 bg-green-900/10 text-green-700 px-4 py-2 rounded-full font-semibold border border-green-500/30">Orange Money</span>
+        <span class="inline-flex items-center gap-2 bg-blue-900/10 text-blue-700 px-4 py-2 rounded-full font-semibold border border-blue-500/30">Wave</span>
+        <span class="inline-flex items-center gap-2 bg-red-900/10 text-red-700 px-4 py-2 rounded-full font-semibold border border-red-500/30">Free Money</span>
+      </div>
+      <div class="glass p-8 rounded-3xl inline-block">
+        <p class="text-stone-500 mb-2">Numéro marchand</p>
+        <p class="text-4xl font-bold text-stone-900 mb-4">+221 77 123 45 67</p>
+        <button onclick="copyNumber()" class="bg-nova-amber hover:bg-nova-amber-dark text-white px-6 py-3 rounded-full font-semibold transition">Copier le numéro</button>
+      </div>
+      <div class="grid md:grid-cols-3 gap-6 mt-12 text-left">
+        <div class="bento-card p-6">
+          <div class="bg-nova-amber/20 w-12 h-12 rounded-xl flex items-center justify-center mb-4 text-nova-amber font-bold text-xl">1</div>
+          <h4 class="font-bold text-lg mb-2 text-stone-900">Envoyez le montant</h4>
+          <p class="text-stone-600">Transférez le montant de votre commande au numéro ci-dessus</p>
+        </div>
+        <div class="bento-card p-6">
+          <div class="bg-nova-amber/20 w-12 h-12 rounded-xl flex items-center justify-center mb-4 text-nova-amber font-bold text-xl">2</div>
+          <h4 class="font-bold text-lg mb-2 text-stone-900">Ajoutez la référence</h4>
+          <p class="text-stone-600">Indiquez « Nova + votre nom » en motif de transfert</p>
+        </div>
+        <div class="bento-card p-6">
+          <div class="bg-nova-amber/20 w-12 h-12 rounded-xl flex items-center justify-center mb-4 text-nova-amber font-bold text-xl">3</div>
+          <h4 class="font-bold text-lg mb-2 text-stone-900">Confirmez par WhatsApp</h4>
+          <p class="text-stone-600">Envoyez une capture d'écran du paiement à notre WhatsApp</p>
+        </div>
+      </div>
+      <p class="text-sm text-stone-400 mt-8">*Envoyez la référence par WhatsApp après paiement. Votre commande sera confirmée sous 5 minutes.</p>
+    </div>
+  </section>
+
+  <!-- ====== FOOTER RICH ====== -->
+  <footer id="contact" class="bg-stone-900 text-stone-300">
+    <div class="max-w-7xl mx-auto px-4 py-16 grid md:grid-cols-4 gap-8">
+      <!-- Colonne logo -->
+      <div>
+        <h3 class="text-2xl font-bold text-nova-amber">Pizzeria Nova</h3>
+        <p class="mt-4 text-stone-400">La pizza artisanale livrée chez vous en 30 minutes. Ingrédients frais, pâte maison, amour italien.</p>
+        <div class="flex gap-4 mt-6">
+          <a href="#" class="text-stone-400 hover:text-nova-amber transition"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M22 12c0-5.523-4.477-10-10-10S2 6.477 2 12c0 4.991 3.657 9.128 8.438 9.878v-6.987h-2.54V12h2.54V9.797c0-2.506 1.492-3.89 3.777-3.89 1.094 0 2.238.195 2.238.195v2.46h-1.26c-1.242 0-1.63.771-1.63 1.562V12h2.773l-.443 2.89h-2.33v6.988C18.343 21.128 22 16.991 22 12z"/></svg></a>
+          <a href="#" class="text-stone-400 hover:text-nova-amber transition"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M12.315 2c2.43 0 2.784.013 3.808.06 1.064.049 1.791.218 2.427.465a4.902 4.902 0 011.772 1.153 4.902 4.902 0 011.153 1.772c.247.636.416 1.363.465 2.427.048 1.067.06 1.407.06 4.123v.08c0 2.643-.012 2.987-.06 4.043-.049 1.064-.218 1.791-.465 2.427a4.902 4.902 0 01-1.153 1.772 4.902 4.902 0 01-1.772 1.153c-.636.247-1.363.416-2.427.465-1.067.048-1.407.06-4.123.06h-.08c-2.643 0-2.987-.012-4.043-.06-1.064-.049-1.791-.218-2.427-.465a4.902 4.902 0 01-1.772-1.153 4.902 4.902 0 01-1.153-1.772c-.247-.636-.416-1.363-.465-2.427-.047-1.024-.06-1.379-.06-3.808v-.63c0-2.43.013-2.784.06-3.808.049-1.064.218-1.791.465-2.427a4.902 4.902 0 011.153-1.772A4.902 4.902 0 016.11 2.525c.636-.247 1.363-.416 2.427-.465C8.901 2.013 9.256 2 11.685 2h.63zm-.081 1.802h-.468c-2.456 0-2.784.011-3.807.058-.975.045-1.504.207-1.857.344-.467.182-.8.398-1.15.748-.35.35-.566.683-.748 1.15-.137.353-.3.882-.344 1.857-.047 1.023-.058 1.351-.058 3.807v.468c0 2.456.011 2.784.058 3.807.045.975.207 1.504.344 1.857.182.466.399.8.748 1.15.35.35.683.566 1.15.748.353.137.882.3 1.857.344 1.054.048 1.37.058 4.041.058h.08c2.597 0 2.917-.01 3.96-.058.976-.045 1.505-.207 1.858-.344.466-.182.8-.398 1.15-.748.35-.35.566-.683.748-1.15.137-.353.3-.882.344-1.857.048-1.055.058-1.37.058-4.041v-.08c0-2.597-.01-2.917-.058-3.96-.045-.976-.207-1.505-.344-1.858a3.097 3.097 0 00-.748-1.15 3.098 3.098 0 00-1.15-.748c-.353-.137-.882-.3-1.857-.344-1.023-.047-1.351-.058-3.807-.058zM12 6.865a5.135 5.135 0 110 10.27 5.135 5.135 0 010-10.27zm0 1.802a3.333 3.333 0 100 6.666 3.333 3.333 0 000-6.666zm5.338-3.205a1.2 1.2 0 110 2.4 1.2 1.2 0 010-2.4z"/></svg></a>
+          <a href="#" class="text-stone-400 hover:text-nova-amber transition"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M8.29 20.251c7.547 0 11.675-6.253 11.675-11.675 0-.178 0-.355-.012-.53A8.348 8.348 0 0022 5.92a8.19 8.19 0 01-2.357.646 4.118 4.118 0 001.804-2.27 8.224 8.224 0 01-2.605.996 4.107 4.107 0 00-6.993 3.743 11.65 11.65 0 01-8.457-4.287 4.106 4.106 0 001.27 5.477A4.072 4.072 0 012.8 9.713v.052a4.105 4.105 0 003.292 4.022 4.095 4.095 0 01-1.853.07 4.108 4.108 0 003.834 2.85A8.233 8.233 0 012 18.407a11.616 11.616 0 006.29 1.84"/></svg></a>
+          <a href="https://wa.me/221771234567" class="text-stone-400 hover:text-nova-amber transition"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg></a>
+        </div>
+      </div>
+
+      <!-- Liens 1 -->
+      <div>
+        <h4 class="text-lg font-semibold mb-4 text-nova-amber">Menu</h4>
+        <ul class="space-y-2 text-stone-400">
+          <li><a href="#menu" class="hover:text-white transition">Pizzas</a></li>
+          <li><a href="#menu" class="hover:text-white transition">Pâtes</a></li>
+          <li><a href="#menu" class="hover:text-white transition">Boissons</a></li>
+          <li><a href="#menu" class="hover:text-white transition">Desserts</a></li>
+        </ul>
+      </div>
+
+      <!-- Liens 2 -->
+      <div>
+        <h4 class="text-lg font-semibold mb-4 text-nova-amber">Infos</h4>
+        <ul class="space-y-2 text-stone-400">
+          <li><a href="#hero" class="hover:text-white transition">Accueil</a></li>
+          <li><a href="#features" class="hover:text-white transition">Philosophie</a></li>
+          <li><a href="#galerie" class="hover:text-white transition">Galerie</a></li>
+          <li><a href="#paiement" class="hover:text-white transition">Paiement</a></li>
+        </ul>
+      </div>
+
+      <!-- Contact & Newsletter -->
+      <div>
+        <h4 class="text-lg font-semibold mb-4 text-nova-amber">Contact</h4>
+        <p class="text-stone-400">123 Rue des Saveurs, Dakar</p>
+        <p class="text-stone-400 mt-2">+221 77 123 45 67</p>
+        <p class="text-stone-400 mt-2">contact@pizzeria-nova.sn</p>
+        <div class="mt-6">
+          <h5 class="text-sm font-semibold text-white mb-2">Newsletter</h5>
+          <form id="newsletter-form" class="flex gap-2">
+            <input type="email" id="newsletter-email" placeholder="Votre email" class="bg-stone-800 text-white px-4 py-2 rounded-full flex-1 border border-stone-700 focus:outline-none focus:ring-2 focus:ring-nova-amber placeholder:text-stone-500" required>
+            <button type="submit" class="bg-nova-amber hover:bg-nova-amber-dark text-white px-4 py-2 rounded-full font-semibold">OK</button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sous-footer -->
+    <div class="border-t border-stone-800 py-6">
+      <div class="max-w-7xl mx-auto px-4 flex flex-col md:flex-row justify-between items-center gap-4 text-stone-500 text-sm">
+        <p>© 2026 Pizzeria Nova. Tous droits réservés.</p>
+        <div class="flex gap-4 items-center">
+          <span>Paiements acceptés :</span>
+          <span class="bg-stone-800 px-3 py-1 rounded border border-stone-700">Orange Money</span>
+          <span class="bg-stone-800 px-3 py-1 rounded border border-stone-700">Wave</span>
+          <span class="bg-stone-800 px-3 py-1 rounded border border-stone-700">Free Money</span>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ====== WHATSAPP FLOAT ====== -->
+  <a href="https://wa.me/221771234567?text=Bonjour%20Pizzeria%20Nova%20!%20Je%20souhaite%20commander." target="_blank" class="fixed bottom-6 right-6 z-50 bg-[#25D366] text-white p-4 rounded-full shadow-xl hover:bg-[#20bd5a] transition-all animate-pulseSlow group">
+    <svg class="w-7 h-7" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+    <span class="absolute -top-10 right-0 bg-stone-800 text-white text-sm px-3 py-1 rounded-full opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap">Discuter sur WhatsApp</span>
+  </a>
+
+  <!-- ====== PANIER FLOTTANT ====== -->
+  <div id="cart-floating" class="fixed bottom-6 left-6 z-50 hidden">
+    <button onclick="toggleCart()" class="relative bg-nova-amber text-white p-3 rounded-full shadow-xl hover:bg-nova-amber-dark transition">
+      <svg class="w-7 h-7" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/
+</body>
+</html>
